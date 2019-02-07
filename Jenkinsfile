@@ -41,8 +41,8 @@ spec:
     stage('Deploy') {
         agent {label 'host'}
         steps{
-        	bat 'kubectl delete deploy/hello-express'
-        	bat 'kubectl delete service/hello-express'
+        	bat 'kubectl delete deploy/hello-express || true'
+        	bat 'kubectl delete service/hello-express || true'
         	bat 'kubectl run hello-express --image=rnonaka/hello-express:latest --port=3000'
         	bat 'kubectl expose deployment/hello-express --type="NodePort" --port 3000'
         }
