@@ -20,7 +20,7 @@ spec:
     }
   }
   stages {
-    stage('test') {
+    stage('Test') {
       steps {
         container('node') {
           checkout scm
@@ -30,12 +30,21 @@ spec:
         }
       }
     }
-    stage('build') {
+    stage('Docker Build') {
         agent {label 'host'}
         steps {
             checkout scm
             bat 'docker build -t rnonaka/hello-express .'
+            bat 'docker push rnonaka/hello-express'
         }
+    }
+    stage('Deploy') {
+        agent {label 'host'}
+        steps{
+        	bat 'kubectl delete deploy/hello-express'
+        	bat 'kubectl delete service/hello-express'
+        	bat 'kubectl run hello-express --image=rnonaka/hello-express:latest --port=3000'
+        	bat 'kubectl expose deployment/hello-express --type="NodePort" --port 3000'
     }
   }
 }
