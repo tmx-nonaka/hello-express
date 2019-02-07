@@ -5,11 +5,17 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "test"
+    "test": "node_modules/.bin/mocha test/test_calc.js --reporter mocha-junit-reporter"
   },
   "author": "nonaka",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mocha": "^5.2.0",
+    "mocha-junit-reporter": "^1.18.0"
+  },
+  "devDependencies": {
+    "grunt-mocha-istanbul": "^5.0.2",
+    "sinon-chai": "^3.3.0"
   }
 }
