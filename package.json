@@ -1,0 +1,15 @@
+{
+  "name": "sample-app",
+  "version": "1.0.0",
+  "description": "Sample application for Jenkins demo.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "test"
+  },
+  "author": "nonaka",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
