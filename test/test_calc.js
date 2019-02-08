@@ -9,5 +9,8 @@ describe('myfuncs', function() {
 		it ('100 plus zero', function() {
 			assert.equal(myfuncs.add(100,0),100)
 		})
+		it ('Message is "Hello World!"', function() {
+			assert.equal(myfuncs.message(), "Hello World!")
+		})
 	})
 })
