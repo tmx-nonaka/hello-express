@@ -27,13 +27,14 @@ spec:
           sh 'npm install'
           sh 'npm test'
           junit 'test-results.xml'
+          stash includes: 'Dockerfile,src/**.*,package.json', name: 'node-app'
         }
       }
     }
     stage('Docker Build') {
         agent {label 'host'}
         steps {
-            checkout scm
+            unstash 'node-app'
             bat 'docker build -t rnonaka/hello-express .'
             bat 'docker push rnonaka/hello-express'
         }
