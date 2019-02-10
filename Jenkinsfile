@@ -49,4 +49,15 @@ spec:
         }
     }
   }
+  post {
+  	success {
+  		slackSend color: 'good', message: 'Build is Successful'
+  	}
+  	unstable {
+  		slackSend color: 'warning', message: 'Some tests is failure'
+  	}
+  	failure {
+  		slackSend color: 'danger', message: 'Build is failure'
+  	}
+  }
 }
