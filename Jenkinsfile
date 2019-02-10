@@ -51,13 +51,13 @@ spec:
   }
   post {
   	success {
-  		slackSend color: 'good', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER}] is Succecful. (<${env.BUILD_URL}|Open>)"
+  		slackSend color: 'good', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER} is Succecful. (<${env.BUILD_URL}|Open>)"
   	}
   	unstable {
-  		slackSend color: 'warning', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER}] is Unstable. (<${env.BUILD_URL}|Open>)"
+  		slackSend color: 'warning', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER} is Unstable. (<${env.BUILD_URL}|Open>)"
   	}
   	failure {
-  		slackSend color: 'danger', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER}] is Failure. (<${env.BUILD_URL}|Open>)"
+  		slackSend color: 'danger', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER} is Failure. (<${env.BUILD_URL}|Open>)"
   	}
   }
 }
