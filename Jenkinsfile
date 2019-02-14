@@ -1,4 +1,6 @@
-pipeline {
+﻿pipeline {
+  // KubenetesのPodをビルドエージェントとして指定
+  // プロビジョニングするPodはyamlで定義
   agent {
     kubernetes {
       label 'mypod'
@@ -20,6 +22,7 @@ spec:
     }
   }
   stages {
+    // nodeのコンテナ内でテスト実行
     stage('Test') {
       steps {
         container('node') {
@@ -30,6 +33,7 @@ spec:
         }
       }
     }
+    // ホストマシン上でDocke Buildして、Docker HubへPush
     stage('Docker Build') {
         agent {label 'host'}
         steps {
@@ -38,6 +42,8 @@ spec:
             bat 'docker push rnonaka/hello-express'
         }
     }
+    // アプリをKubernetes上にデプロイ
+    // 手抜きでyamlは書いてない
     stage('Deploy') {
         agent {label 'host'}
         steps{
@@ -49,6 +55,7 @@ spec:
         }
     }
   }
+  // ビルド結果をSlackへ通知
   post {
   	success {
   		slackSend color: 'good', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER} is Succecful. (<${env.BUILD_URL}|Open>)"
