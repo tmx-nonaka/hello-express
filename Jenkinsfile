@@ -1,4 +1,4 @@
-﻿pipeline {
+pipeline {
   // KubenetesのPodをビルドエージェントとして指定
   // プロビジョニングするPodはyamlで定義
   agent {
