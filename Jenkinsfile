@@ -20,13 +20,13 @@ pipeline {
           checkout scm
           sh 'npm install'
           sh 'npm test'
-	  post {
-	    always{
-              junit 'test-results.xml'
-	    }
-	  }
         }
       }
+      post {
+            always{
+              junit 'test-results.xml'
+            }
+          }
     }
     // Docke Buildして、Docker HubへPush
     stage('Docker Build') {
