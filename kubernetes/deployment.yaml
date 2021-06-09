@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-deployment
+  labels:
+    app: hello-express
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-express
+  template:
+    metadata:
+      labels:
+        app: hello-express
+    spec:
+      containers:
+      - name: hello-express
+        image: rnonaka/hello-express
+        ports:
+        - containerPort: 3000
