@@ -1,29 +1,20 @@
-pipeline {
-  // KubenetesのPodをビルドエージェントとして指定
-  // プロビジョニングするPodはyamlで定義
-  agent {
-    kubernetes {
-      label 'mypod'
-      defaultContainer 'jnlp'
-      yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    some-label: some-label-value
-spec:
-  containers:
-  - name: node
-    image: node:10.15
-    command:
-    - cat
-    tty: true
-"""
-    }
-  }
-  stages {
-    // nodeのコンテナ内でテスト実行
+peline {
+  agent any
+  
+   stages {
+    // Kubenetes上にコンテナを起動してテスト実行
     stage('Test') {
+      // 起動するコンテナのテンプレートを設定
+      agent {
+        kubernetes {
+          containerTemplate {
+            name 'node'
+            image 'node:10.15'
+            ttyEnabled true
+          command 'cat'
+          }
+        }
+      }
       steps {
         container('node') {
           checkout scm
@@ -33,30 +24,33 @@ spec:
         }
       }
     }
-    // ホストマシン上でDocke Buildして、Docker HubへPush
+    // Docke Buildして、Docker HubへPush
     stage('Docker Build') {
-        agent {label 'host'}
-        steps {
-            checkout scm
-            bat 'docker build -t rnonaka/hello-express .'
-            bat 'docker push rnonaka/hello-express'
-        }
+        agent {label 'master'}
+            steps {
+                checkout scm
+                //sh 'docker build -t rnonaka/hello-express .'
+                //sh 'docker push rnonaka/hello-express'
+                sleep 5
+                echo 'dummy step'
+            }
     }
-    // アプリをKubernetes上にデプロイ
-    // 手抜きでyamlは書いてない
+    // manifest fileを使って使ってアプリをKubenetesへデプロイ
     stage('Deploy') {
-        agent {label 'host'}
+        agent {label 'master'}
         steps{
-        	bat 'kubectl delete deploy/hello-express || true'
-        	bat 'kubectl delete service/hello-express || true'
-        	bat 'kubectl run hello-express --image=rnonaka/hello-express:latest --port=3000'
-        	bat 'kubectl expose deployment/hello-express --type="NodePort" --port 3000'
-        	bat 'kubectl get service/hello-express'
+            echo 'test'
+        	sh '/usr/local/bin/kubectl delete deploy sample-deployment || true'
+        	sh '/usr/local/bin/kubectl delete service hello-express || true'
+        	sh '/usr/local/bin/kubectl apply -f ./kubernetes/deployment.yaml'
+        	sh '/usr/local/bin/kubectl apply -f ./kubernetes/sample-service.yaml'
+        	sh '/usr/local/bin/kubectl get service hello-express'
         }
     }
-  }
-  // ビルド結果をSlackへ通知
-  post {
+   }
+   
+   // ビルド結果をSlackへ通知
+   post {
   	success {
   		slackSend color: 'good', message: "Job ${env.JOB_NAME}:#${env.BUILD_NUMBER} is Succecful. (<${env.BUILD_URL}|Open>)"
   	}
