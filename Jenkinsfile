@@ -20,7 +20,11 @@ pipeline {
           checkout scm
           sh 'npm install'
           sh 'npm test'
-          junit 'test-results.xml'
+	  post {
+	    always{
+              junit 'test-results.xml'
+	    }
+	  }
         }
       }
     }
